@@ -13,6 +13,12 @@ from matplotlib.collections import PatchCollection
 idx = pd.IndexSlice
 ROOT = os.environ['HOME'] + '/python/'
 
+'''
+Given a session dataframe, it creates a small video animating the responses of
+the rats and/or model that is trying to predict the choice of the rat. This will
+help get intuition as to how a) animals respond to feedback from their environment
+and b) how different models that we fit to the data are predicting choice
+'''
 
 class AnimatedSession(object):
     def __init__(self, **kwargs):
@@ -169,19 +175,3 @@ class AnimatedSession(object):
         self.ani.save(target, fps=2,
                     extra_args=['-vcodec', 'h264',
                   '-pix_fmt', 'yuv420p'])
-    def show(self):
-        plt.show()
-        HTML(self.ani.to_html5_video())
-if __name__ == '__main__':
-    #load a dataset
-    sessions = pickle.load(open(ROOT + \
-            'DATA_structures/session_dataframes/PSR_SESSIONS_DATAFRAME.p','rb'))
-    #get a single session
-    session = sessions.loc[idx['57','PL-muscimol',:,:],:]
-    t1 = time.time()
-    a = AnimatedSession(session=session, title='PL-muscimol')
-    t2 = time.time()
-    a.save_to_file()
-    t3 = time.time()
-    print 'time to create object:%.2f' %(t2-t1)
-    print 'time to save video: %.2f' %(t3 - t2)
